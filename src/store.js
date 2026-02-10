@@ -4,7 +4,7 @@ import userReducer from './features/Users/userSlice'
 import loggedUserReducer from './features/Users/loggedUserSlice'
 import taskReducer from './features/Tasks/taskSlice'
 import { persistReducer, presistStore } from 'redux-persist';
-import persistStore from 'redux-persist/es/persistStore';
+
 
 const persistConfig = {
     key: 'root',
@@ -31,4 +31,4 @@ export const store = configureStore({
     }
 })
 
-export const persistor = persistStore(store);
+export const persistor = presistStore(store);

@@ -1,13 +1,18 @@
 
+import { Outlet } from 'react-router-dom'
 import './App.css'
+import SideBar from './Components/SideBar'
 
 function App() {
 
   return (
-    <>
-      <h1>EduTrack</h1>
-    </>
-  )
+    <div className="flex">
+      <SideBar />
+      <div className="flex-1">
+        <Outlet />
+      </div>
+    </div>
+  );
 }
 
 export default App
