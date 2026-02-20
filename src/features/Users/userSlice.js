@@ -11,7 +11,7 @@ const userSlice = createSlice({
         registerStudent: (state, action) => {
             state.users.push(
                 {
-                    studentId: nanoid,
+                    studentId: nanoid(),
                     ...action.payload
                 }
             );

@@ -3,7 +3,7 @@ import storage from 'redux-persist/lib/storage'
 import userReducer from './features/Users/userSlice'
 import loggedUserReducer from './features/Users/loggedUserSlice'
 import taskReducer from './features/Tasks/taskSlice'
-import { persistReducer, presistStore } from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 
 
 const persistConfig = {
@@ -24,11 +24,11 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 export const store = configureStore({
     reducer: persistedReducer,
 
-    middleware: (getDefaultMiddleware) => (getDefaultMiddleware) => {
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware( {
         serializableCheck: {
-            ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"];
+            ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"]
         }
-    }
+    })
 })
 
-export const persistor = presistStore(store);
+export const persistor = persistStore(store);

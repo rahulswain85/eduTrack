@@ -5,12 +5,14 @@ const initialState = {
 }
 
 const loggedUserSlice = createSlice({
-    name: "loggedUser",
-    initialState,
+  name: "loggedUser",
+  initialState,
+  reducers: {
     studentLogin: (state, action) => {
-        state.loggedUser = action.payload
-    }
-})
+      state.loggedUser = action.payload;
+    },
+  },
+});
 
 export const { studentLogin } = loggedUserSlice.actions;
 export default loggedUserSlice.reducer;
