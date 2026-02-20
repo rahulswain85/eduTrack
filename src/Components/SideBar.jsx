@@ -27,7 +27,7 @@ function SideBar() {
 
   return (
     <div
-      className={`bg-indigo-500 text-white md:w-[45vh] h-screen md:flex md:flex-col  ${loggedUser ? `justify-start items-center` : `justify-center`} items-center hidden rounded-r-xl shadow-lg`}
+      className={`bg-indigo-500 text-white md:w-[45vh] h-screen md:flex md:flex-col  ${loggedUser ? `justify-start items-center` : `justify-center`} items-center hidden shadow-lg`}
     >
       {!loggedUser ? (
         <div
@@ -81,7 +81,7 @@ function SideBar() {
               Analysis
             </NavLink>
             <button
-              className={`flex gap-2 justify-center items-center cursor-pointer hover:underline`}
+              className={`flex gap-2 justify-center items-center cursor-pointer hover:underline `}
               onClick={handleLogout}
             >
               <RiLogoutCircleRFill />
