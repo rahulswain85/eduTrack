@@ -9,8 +9,7 @@ const initialState = {
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
-  reducers:
-  {
+  reducers: {
     addNewTask: (state, action) => {
       state.tasks.push({
         taskId: nanoid(),
@@ -23,16 +22,23 @@ const taskSlice = createSlice({
       });
     },
     updateStatus: (state, action) => {
-      console.log(action.payload.status, action.payload.id);
-      
-      const task = state.tasks.find(task => task.taskId == action.payload.id);
+
+      const task = state.tasks.find((task) => task.taskId == action.payload.id);
 
       if (task) {
         task.taskStatus = action.payload.status;
       }
-    }
-  }
+    },
+    updatePriority: (state, action) => {
+
+      const task = state.tasks.find((task) => task.taskId == action.payload.id);
+
+      if (task) {
+        task.taskPriority = action.payload.priority;
+      }
+    },
+  },
 });
 
-export const { addNewTask, updateStatus } = taskSlice.actions;
+export const { addNewTask, updateStatus, updatePriority } = taskSlice.actions;
 export default taskSlice.reducer

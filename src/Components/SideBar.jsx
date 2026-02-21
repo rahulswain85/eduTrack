@@ -22,6 +22,7 @@ function SideBar() {
       dispatch(studentLogin(null));
       toast.info("You are logged out!");
       navigate("/");
+      setIsOpen(false)
     } catch (error) {
       toast.error("Problem logging out!");
     }
@@ -29,17 +30,20 @@ function SideBar() {
 
   return (
     <div>
-      <div className="md:hidden flex z-50 absolute left-2 top-6 hover:text-indigo-300">
-        {isOpen ? (
-          <div onClick={() => setIsOpen(false)}>
-            <RxCross2 className="size-5" />
-          </div>
-        ) : (
-          <div onClick={() => setIsOpen(true)}>
-            <RiMenuUnfoldFill className="size-5" />
-          </div>
-        )}
-      </div>
+      {loggedUser ? (
+        <div className="md:hidden flex z-50 absolute left-2 top-6 hover:text-indigo-300">
+          {isOpen ? (
+            <div onClick={() => setIsOpen(false)}>
+              <RxCross2 className="size-5" />
+            </div>
+          ) : (
+            <div onClick={() => setIsOpen(true)}>
+              <RiMenuUnfoldFill className="size-5" />
+            </div>
+          )}
+        </div>
+      ) : null}
+
       {isOpen ? (
         <div className="md:hidden flex flex-col w-full bg-indigo-100/80 justify-center items-center z-10 absolute p-4 top-20 ">
           <>

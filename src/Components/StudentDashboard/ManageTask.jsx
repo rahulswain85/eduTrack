@@ -2,7 +2,8 @@
 import { AiOutlineRise } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
-import { updateStatus } from '../../features/Tasks/taskSlice';
+import { updatePriority, updateStatus } from '../../features/Tasks/taskSlice';
+
 
 function ManageTask() {
   const taskSelector = useSelector(state => state.tasks.tasks);
@@ -16,6 +17,16 @@ function ManageTask() {
       toast.success('Task status updated');
     } catch (error) {
       toast.error('Failed to update the status');
+      console.log(error);
+    }
+  }
+
+  function handlePriorityChange(id, priority) {
+    try {
+      dispatch(updatePriority({ id, priority }));
+      toast.success("Task status updated");
+    } catch (error) {
+      toast.error("Failed to update the status");
       console.log(error);
     }
   }
@@ -36,27 +47,45 @@ function ManageTask() {
         Manage Task
       </h1>
 
-      <div className="rounded-2xl bg-white w-full md:min-h-[80vh] flex md:flex-row flex-col gap-4 p-4">
-        <div className="md:w-[33%] w-full hideScrollBar overflow-auto md:min-h-full min-h-[30%] bg-red-200 flex flex-col gap-4 pt-0 p-2 items-center">
-          <h1 className="text-center font-bold text-2xl sticky top-0 bg-red-700 text-white w-full">High Priority</h1>
+      <div className="rounded-2xl bg-white overflow-auto hideScrollBar w-full md:min-h-[80vh] flex md:flex-row flex-col gap-6 p-8">
+        <div className="md:w-[33%] w-full h-full hideScrollBar overflow-auto rounded-2xl bg-red-200 flex flex-col gap-4 pt-0 p-2 items-center">
+          <h1 className="text-center font-bold text-2xl sticky top-0 bg-red-700 text-white w-full">
+            High Priority
+          </h1>
           {highPriorityTasks.map((task) => (
             <div
               key={task.taskId}
-              className="bg-white w-full p-4 h-full flex flex-col flex-wrap border-l-5 inset-shadow-sm/10 border-indigo-400 gap-2 rounded-2xl shadow hover:shadow-md justify-baseline items-start"
+              className="bg-white w-full p-4 flex flex-col flex-wrap border-l-5 inset-shadow-sm/10 border-indigo-400 gap-2 rounded-2xl shadow hover:shadow-md justify-baseline items-start"
             >
-              <p
-                className={`flex justify-center items-center gap-4 font-bold text-lg`}
-              >
-                {task.taskPriority}
-                <AiOutlineRise
-                  className={`bg-indigo-800 font-extrabold rounded-full p-1 size-6 ${task.taskPriority === "High" ? `text-red-500` : task.taskPriority === "Medium" ? `text-amber-400` : `text-green-500`}`}
-                />
-              </p>
+              <div className="flex gap-5 justify-around items-center">
+                <p
+                  className={`flex justify-center items-center gap-4 font-bold text-lg`}
+                >
+                  {task.taskPriority}
+                  <AiOutlineRise
+                    className={`bg-indigo-800 font-extrabold rounded-full p-1 size-6 ${task.taskPriority === "High" ? `text-red-500` : task.taskPriority === "Medium" ? `text-amber-400` : `text-green-500`}`}
+                  />
+                </p>
+
+                <div className="flex gap-0.5 justify-evenly ">
+                  <select
+                    value={task.taskPriority}
+                    onChange={(e) =>
+                      handlePriorityChange(task.taskId, e.target.value)
+                    }
+                    className={`rounded-2xl ${task.taskPriority === "Low" ? `bg-green-500` : task.taskPriority === "Medium" ? `bg-amber-300` : `bg-red-500 text-white`}`}
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+              </div>
               <hr className="w-full " />
               <p className="text-2xl font-bold text-indigo-500">
                 {task.taskTitle}
               </p>
-              <div>
+              <div className="flex flex-col w-full">
                 <p className="italic font-semibold">{task.taskDueDate}</p>
                 <select
                   onChange={(e) =>
@@ -74,26 +103,44 @@ function ManageTask() {
           ))}
         </div>
 
-        <div className="md:w-[33%] hideScrollBar w-full md:min-h-full min-h-[30%] overflow-auto bg-amber-200 flex flex-col gap-4 pt-0 p-2  items-center">
-          <h1 className="text-center font-bold text-2xl sticky top-0 bg-amber-400 w-full">Medium Priority</h1>
+        <div className="md:w-[33%] w-full h-full hideScrollBar overflow-auto rounded-2xl bg-amber-100 flex flex-col gap-4 pt-0 p-2 items-center">
+          <h1 className="text-center font-bold text-2xl sticky top-0 bg-amber-400 w-full">
+            Medium Priority
+          </h1>
           {mediumPriorityTasks.map((task) => (
             <div
               key={task.taskId}
-              className="bg-white w-full p-4 h-full flex flex-col flex-wrap border-l-5 inset-shadow-sm/10 border-indigo-400 gap-2 rounded-2xl shadow hover:shadow-md justify-baseline items-start"
+              className="bg-white w-full p-4 flex flex-col flex-wrap border-l-5 inset-shadow-sm/10 border-indigo-400 gap-2 rounded-2xl shadow hover:shadow-md justify-baseline items-start"
             >
-              <p
-                className={`flex justify-center items-center gap-4 font-bold text-lg`}
-              >
-                {task.taskPriority}
-                <AiOutlineRise
-                  className={`bg-indigo-800 font-extrabold rounded-full p-1 size-6 ${task.taskPriority === "High" ? `text-red-500` : task.taskPriority === "Medium" ? `text-amber-400` : `text-green-500`}`}
-                />
-              </p>
+              <div className="flex gap-5 justify-around items-center">
+                <p
+                  className={`flex justify-center items-center gap-4 font-bold text-lg`}
+                >
+                  {task.taskPriority}
+                  <AiOutlineRise
+                    className={`bg-indigo-800 font-extrabold rounded-full p-1 size-6 ${task.taskPriority === "High" ? `text-red-500` : task.taskPriority === "Medium" ? `text-amber-400` : `text-green-500`}`}
+                  />
+                </p>
+
+                <div className="flex gap-0.5 justify-evenly ">
+                  <select
+                    onChange={(e) =>
+                      handlePriorityChange(task.taskId, e.target.value)
+                    }
+                    value={task.taskPriority}
+                    className={`rounded-2xl ${task.taskPriority === "Low" ? `bg-green-500` : task.taskPriority === "Medium" ? `bg-amber-300` : `bg-red-500 text-white`}`}
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+              </div>
               <hr className="w-full " />
               <p className="text-2xl font-bold text-indigo-500">
                 {task.taskTitle}
               </p>
-              <div>
+              <div className="flex flex-col w-full">
                 <p className="italic font-semibold">{task.taskDueDate}</p>
                 <select
                   onChange={(e) =>
@@ -111,26 +158,46 @@ function ManageTask() {
           ))}
         </div>
 
-        <div className="md:w-[33%] hideScrollBar w-full md:min-h-full min-h-[30%] bg-green-200 flex flex-col gap-4 pt-0 p-2 items-center">
-          <h1 className="text-center font-bold text-2xl sticky top-0 w-full bg-green-600 text-white">Low Priority</h1>
+        <div className="md:w-[33%] hideScrollBar w-full h-full overflow-auto md:min-h-full rounded-2xl min-h-[30%] bg-green-200 flex flex-col gap-4 pt-0 p-2 items-center">
+          <h1 className="text-center font-bold text-2xl sticky top-0 w-full bg-green-600 text-white">
+            Low Priority
+          </h1>
           {lowPriorityTasks.map((task) => (
             <div
               key={task.taskId}
-              className="bg-white w-full p-4 h-full flex flex-col flex-wrap border-l-5 inset-shadow-sm/10 border-indigo-400 gap-2 rounded-2xl shadow hover:shadow-md justify-baseline items-start"
+              className="bg-white w-full p-4 flex flex-col flex-wrap border-l-5 inset-shadow-sm/10 border-indigo-400 gap-2 rounded-2xl shadow hover:shadow-md justify-baseline items-start"
             >
-              <p
-                className={`flex justify-center items-center gap-4 font-bold text-lg`}
-              >
-                {task.taskPriority}
-                <AiOutlineRise
-                  className={`bg-indigo-800 font-extrabold rounded-full p-1 size-6 ${task.taskPriority === "High" ? `text-red-500` : task.taskPriority === "Medium" ? `text-amber-400` : `text-green-500`}`}
-                />
-              </p>
+              <div className="flex gap-5 justify-around items-center">
+                <p
+                  className={`flex justify-center items-center gap-4 font-bold text-lg`}
+                >
+                  {task.taskPriority}
+                  <AiOutlineRise
+                    className={`bg-indigo-800 font-extrabold rounded-full p-1 size-6 ${task.taskPriority === "High" ? `text-red-500` : task.taskPriority === "Medium" ? `text-amber-400` : `text-green-500`}`}
+                  />
+                </p>
+
+                <div className="flex gap-0.5 justify-evenly ">
+                  <select
+                    onChange={(e) =>
+                      handlePriorityChange(task.taskId, e.target.value)
+                    }
+                    value={task.taskPriority}
+                    className={`rounded-2xl ${task.taskPriority === "Low" ? `bg-green-500` : task.taskPriority === "Medium" ? `bg-amber-300` : `bg-red-500 text-white`}`}
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                </div>
+              </div>
+
               <hr className="w-full " />
+
               <p className="text-2xl font-bold text-indigo-500">
                 {task.taskTitle}
               </p>
-              <div>
+              <div className="flex flex-col w-full">
                 <p className="italic font-semibold">{task.taskDueDate}</p>
                 <select
                   onChange={(e) =>
