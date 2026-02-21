@@ -61,25 +61,33 @@ function Dashboard() {
         <div className="flex-5 bg-indigo-50 w-full">
           <div className="flex md:flex-row gap-3 flex-col flex-wrap w-full p-4 justify-center items-center">
             <div className="flex flex-col flex-wrap bg-indigo-400 md:w-[20%] shadow inset-shadow-sm/20 w-full min-h-[20vh] p-4 rounded-2xl">
-              <p className="md:text-4xl lg:text-3xl text-xl font-bold">{totalTasks}</p>
+              <p className="md:text-4xl lg:text-3xl text-xl font-bold">
+                {totalTasks}
+              </p>
               <p>Total Tasks</p>
             </div>
 
             <div className="flex flex-col flex-wrap bg-pink-300 md:w-[20%] shadow inset-shadow-sm/20 w-full min-h-[20vh] p-4 rounded-2xl">
-              <p className="md:text-4xl lg:text-3xl text-xl font-bold">{pendingTasks}</p>
+              <p className="md:text-4xl lg:text-3xl text-xl font-bold">
+                {pendingTasks}
+              </p>
               <p>Pending</p>
             </div>
             <div className="flex flex-col flex-wrap bg-green-300 md:w-[20%] shadow inset-shadow-sm/20 w-full min-h-[20vh] p-4 rounded-2xl">
-              <p className="md:text-4xl lg:text-3xl text-xl font-bold">{inProgressTasks}</p>
+              <p className="md:text-4xl lg:text-3xl text-xl font-bold">
+                {inProgressTasks}
+              </p>
               <p>In Progress</p>
             </div>
             <div className="flex flex-col flex-wrap bg-sky-200 md:w-[20%] shadow inset-shadow-sm/20 w-full min-h-[20vh] p-4 rounded-2xl">
-              <p className="md:text-4xl lg:text-3xl text-xl font-bold">{completedTasks}</p>
+              <p className="md:text-4xl lg:text-3xl text-xl font-bold">
+                {completedTasks}
+              </p>
               <p className="text-wrap">Task Completed</p>
             </div>
           </div>
         </div>
-        <div className="bg-white flex flex-wrap flex-row gap-3 w-full min-h-[calc(100vh-50vh)] p-6 max-h-[calc(100vh-50vh)] overflow-x-auto rounded-2xl">
+        <div className="bg-white flex flex-wrap hideScrollBar flex-row gap-3 w-full min-h-[calc(100vh-50vh)] p-6 max-h-[calc(100vh-50vh)] overflow-x-auto rounded-2xl">
           {currentStudentTasks().map((task) => (
             <div
               key={task.taskId}
