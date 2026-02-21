@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="flex">
       <SideBar />
-      <div className="ml-1 flex-1">
+      <div className="md:ml-1 ml-0 flex-1">
         <Outlet />
       </div>
 
