@@ -1,6 +1,4 @@
-
-
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import RegisterForm from './RegisterForm';
 import LoginForm from './LoginForm';
 import Logo from '../Logo';
@@ -8,53 +6,52 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function GetStarted() {
-
-  const loggedUser = useSelector(state => state.loggedUser.loggedUser);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
+  const [changeSignInSignUp, setChangeSignInSignUp] = useState('SignIn');
 
-  useEffect(()=>{if (loggedUser) {
-    navigate("/dashboard");
-  }}, [])
-  
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
-  const [changeSignInSignUp, setChangeSignInSignUp] = useState('SignIn')
   return (
-    <div className="h-screen flex justify-center items-center bg-gray-100 ">
-      {/* Card (Centered on screen) */}
-      <div className="md:w-[90vh] w-full md:m-0 m-5 h-[80vh] shadow rounded-2xl flex flex-col p-5">
-        {/* Toggle Section (Top of Card) */}
-        <div className="flex md:w-[50%] w-full m-4 gap-8 px-4 py-3 rounded-full shadow justify-around items-center self-center">
-          <h1
-            className={`sm:text-md text-sm cursor-pointer ${
-              changeSignInSignUp === "SignUp"
-                ? "font-bold bg-indigo-400 text-white px-4 py-3 rounded-full"
-                : ""
+    <div className="min-h-screen flex justify-center items-center bg-linear-to-br from-slate-50 via-indigo-50/30 to-purple-50/50">
+      <div className="md:w-120 w-full mx-4 max-w-md shadow-xl rounded-3xl flex flex-col justify-center items-center overflow-hidden p-2 bg-white/90 backdrop-blur-sm border border-indigo-100">
+        <div className="flex w-full gap-2 p-2 m-4 mx-6 rounded-2xl bg-indigo-100/80">
+          <button
+            type="button"
+            className={`flex-1 py-3 rounded-xl text-sm font-semibold transition ${
+              changeSignInSignUp === 'SignUp'
+                ? 'bg-indigo-500 text-white shadow-md'
+                : 'text-indigo-600 hover:bg-indigo-100'
             }`}
-            onClick={() => setChangeSignInSignUp("SignUp")}
+            onClick={() => setChangeSignInSignUp('SignUp')}
           >
             Register
-          </h1>
-
-          <h1
-            className={`sm:text-md text-sm cursor-pointer ${
-              changeSignInSignUp === "SignIn"
-                ? "font-bold bg-indigo-400 text-white px-4 py-3 rounded-full"
-                : ""
+          </button>
+          <button
+            type="button"
+            className={`flex-1 py-3 rounded-xl text-sm font-semibold transition ${
+              changeSignInSignUp === 'SignIn'
+                ? 'bg-indigo-500 text-white shadow-md'
+                : 'text-indigo-600 hover:bg-indigo-100'
             }`}
-            onClick={() => setChangeSignInSignUp("SignIn")}
+            onClick={() => setChangeSignInSignUp('SignIn')}
           >
             Login
-          </h1>
+          </button>
         </div>
-
-        {/* Form Section (Takes remaining space) */}
-        <div className="flex-1 flex items-center justify-center p-2">
-          {changeSignInSignUp === "SignUp" ? <RegisterForm /> : <LoginForm />}
+        <div className="flex-1 flex w-full items-center justify-center p-6 pt-2">
+          {changeSignInSignUp === 'SignUp' ? <RegisterForm /> : <LoginForm />}
         </div>
-        <Logo />
+        <div className="p-4">
+          <Logo />
+        </div>
       </div>
     </div>
   );
 }
 
-export default GetStarted
+export default GetStarted;

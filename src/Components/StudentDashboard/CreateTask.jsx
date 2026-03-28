@@ -1,83 +1,106 @@
-import React, { useState } from 'react'
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewTask } from '../../features/Tasks/taskSlice';
+import { createTask } from '../../features/Tasks/taskApiSlice';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 function CreateTask() {
-
-  const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
-  const [priority, setPriority] = useState("dis");
+  const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
+  const [priority, setPriority] = useState('');
   const dispatch = useDispatch();
-  const studentSelector = useSelector((state) => state.loggedUser.loggedUser);
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
 
-  
-
-  function handleCreateNewTask(event) {
+  async function handleCreateNewTask(event) {
     event.preventDefault();
-
-    const newTask = {
-      studentId: studentSelector.studentId,
-      taskTitle: title,
-      taskDueDate: date,
-      taskPriority: priority
-    };
+    if (!title.trim()) {
+      toast.error('Task title is required');
+      return;
+    }
+    if (!priority) {
+      toast.error('Please select a priority');
+      return;
+    }
 
     try {
-      dispatch(addNewTask(newTask));
-      toast.success("New Task Created!");
-      setTitle("");
-      setDate("");
-      setPriority("");
+      await dispatch(
+        createTask({
+          taskTitle: title,
+          taskDueDate: date || undefined,
+          taskPriority: priority,
+        })
+      ).unwrap();
+      toast.success('New task created!');
+      setTitle('');
+      setDate('');
+      setPriority('');
+      navigate('/manage');
     } catch (error) {
-      console.log(error);
-      
-      toast.error("Failed to create a task!")
+      toast.error(error || 'Failed to create task');
     }
   }
 
+  if (!user) return null;
 
   return (
-    <div className="w-full bg-white flex flex-col justify-center items-center p-8">
-      <div className="w-full h-full shadow flex flex-col gap-4 justify-center items-center p-4 rounded-2xl">
-        <h1 className="text-3xl font-bold bg-indigo-400 w-full rounded-2xl text-center text-white">
+    <div className="w-full max-w-2xl mx-auto p-6">
+      <div className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-indigo-600 text-white py-5 px-6">
           Create New Task
         </h1>
-        <form className="w-full flex flex-col gap-4 justify-center items-center bg-indigo-50 rounded-2xl p-4" onSubmit={(e)=>handleCreateNewTask(e)}>
-          <input
-            type="text"
-            placeholder="Task Title"
-            className="w-[70%] px-3 py-2 bg-white rounded-2xl"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <div className="flex flex-col justify-between items-start w-[70%]">
-            <label htmlFor="DueDate" className="text-sm ml-2">
+        <form
+          className="flex flex-col gap-5 p-6 bg-slate-50/50"
+          onSubmit={handleCreateNewTask}
+        >
+          <div className="flex flex-col gap-2">
+            <label htmlFor="taskTitle" className="text-sm font-medium text-slate-700">
+              Task Title
+            </label>
+            <input
+              id="taskTitle"
+              type="text"
+              placeholder="Enter task title"
+              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label htmlFor="dueDate" className="text-sm font-medium text-slate-700">
               Due Date
             </label>
             <input
-              id="DueDate"
+              id="dueDate"
               type="date"
-              className="w-full px-3 py-2 bg-white rounded-2xl"
+              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
               value={date}
               onChange={(e) => setDate(e.target.value)}
             />
           </div>
-          <select
-            className="w-[70%] px-3 py-2 bg-white rounded-2xl"
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
+          <div className="flex flex-col gap-2">
+            <label htmlFor="priority" className="text-sm font-medium text-slate-700">
+              Priority
+            </label>
+            <select
+              id="priority"
+              className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              required
+            >
+              <option value="">Select priority</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold transition duration-200 active:scale-[0.98] shadow-md hover:shadow-lg"
           >
-            <option value="dis" disabled>
-              Select Task Priority
-            </option>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
-          </select>
-
-          <button className="w-[70%] rounded-2xl bg-indigo-400 hover:bg-indigo-600 text-lg text-white font-bold transition duration-150 px-3 py-1">
-            Create
+            Create Task
           </button>
         </form>
       </div>
@@ -85,4 +108,4 @@ function CreateTask() {
   );
 }
 
-export default CreateTask
+export default CreateTask;
