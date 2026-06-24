@@ -1,14 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { AiOutlineRise } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchTasks, updateTaskStatus, updateTaskPriority, deleteTask } from '../../features/Tasks/taskApiSlice';
+import { fetchTasks, updateTaskStatus, updateTaskPriority, deleteTask, updateTaskDetails } from '../../features/Tasks/taskApiSlice';
 import { toast } from 'react-toastify';
 import { MdDelete } from 'react-icons/md';
+import { FaEdit } from 'react-icons/fa';
+import UpdateTaskModal from './UpdateTaskModal';
 
 function AllTasks() {
   const { tasks, loading } = useSelector((state) => state.tasks);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [updateError, setUpdateError] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -40,6 +46,41 @@ function AllTasks() {
       toast.success('Task deleted');
     } catch (error) {
       toast.error(error || 'Failed to delete task');
+    }
+  }
+
+  function openUpdate(task) {
+    setSelectedTask(task);
+    setUpdateError(null);
+    setIsUpdateOpen(true);
+  }
+
+  function closeUpdate() {
+    if (isUpdating) return;
+    setIsUpdateOpen(false);
+    setSelectedTask(null);
+    setUpdateError(null);
+  }
+
+  async function handleSaveUpdate({ taskTitle, taskDueDate }) {
+    if (!selectedTask?._id) return;
+    setIsUpdating(true);
+    setUpdateError(null);
+    try {
+      await dispatch(
+        updateTaskDetails({
+          id: selectedTask._id,
+          taskTitle,
+          taskDueDate: taskDueDate || null,
+        })
+      ).unwrap();
+      toast.success('Task updated');
+      setIsUpdateOpen(false);
+      setSelectedTask(null);
+    } catch (error) {
+      setUpdateError(error || 'Failed to update task');
+    } finally {
+      setIsUpdating(false);
     }
   }
 
@@ -107,17 +148,36 @@ function AllTasks() {
                 <option value="Completed">Completed</option>
               </select>
 
-              {/* Delete */}
-              <button
-                onClick={() => handleDelete(task._id)}
-                className="p-2 rounded-lg text-red-500 hover:bg-red-50 self-start sm:self-auto"
-              >
-                <MdDelete className="size-5" />
-              </button>
+              <div>
+                {/* Edit */}
+                <button
+                  onClick={() => openUpdate(task)}
+                  className="p-2 rounded-lg text-indigo-600 hover:bg-indigo-50 self-start sm:self-auto"
+                  aria-label="Update task"
+                >
+                  <FaEdit />
+                </button>
+                {/* Delete */}
+                <button
+                  onClick={() => handleDelete(task._id)}
+                  className="p-2 rounded-lg text-red-500 hover:bg-red-50 self-start sm:self-auto"
+                >
+                  <MdDelete  />
+                </button>
+              </div>
             </div>
           ))}
         </div>
       )}
+
+      <UpdateTaskModal
+        isOpen={isUpdateOpen}
+        task={selectedTask}
+        onCancel={closeUpdate}
+        onSave={handleSaveUpdate}
+        isSaving={isUpdating}
+        error={updateError}
+      />
     </div>
   );
 }

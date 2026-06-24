@@ -63,6 +63,23 @@ export const updateTaskPriority = createAsyncThunk(
   }
 );
 
+export const updateTaskDetails = createAsyncThunk(
+  'tasks/updateDetails',
+  async ({ id, taskTitle, taskDueDate }, { rejectWithValue }) => {
+    try {
+      const payload = {};
+      if (taskTitle !== undefined) payload.taskTitle = taskTitle;
+      if (taskDueDate !== undefined) payload.taskDueDate = taskDueDate;
+      const { data } = await api.patch(`/tasks/${id}`, payload);
+      return data.task;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to update task'
+      );
+    }
+  }
+);
+
 export const deleteTask = createAsyncThunk(
   'tasks/deleteTask',
   async (id, { rejectWithValue }) => {
@@ -109,6 +126,10 @@ const taskApiSlice = createSlice({
         if (idx !== -1) state.tasks[idx] = action.payload;
       })
       .addCase(updateTaskPriority.fulfilled, (state, action) => {
+        const idx = state.tasks.findIndex((t) => t._id === action.payload._id);
+        if (idx !== -1) state.tasks[idx] = action.payload;
+      })
+      .addCase(updateTaskDetails.fulfilled, (state, action) => {
         const idx = state.tasks.findIndex((t) => t._id === action.payload._id);
         if (idx !== -1) state.tasks[idx] = action.payload;
       })
