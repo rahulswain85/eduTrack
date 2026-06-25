@@ -2,8 +2,7 @@ import axios from 'axios';
 
 console.log("API URL:", import.meta.env.VITE_API_URL);
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
-
+const API_BASE = 'https://edutrackbackend-fayx.onrender.com/api/v1';
 export const api = axios.create({
   baseURL: API_BASE,
   withCredentials: true,
